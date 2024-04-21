@@ -60,7 +60,7 @@ export const Header = () => {
             </NavLink>
           </nav>
         </div>
-        {currentLocation && <Form categories={categories} />}
+        {currentLocation && <Form categories={categories as Category} />}
       </div>
     </header>
   );
