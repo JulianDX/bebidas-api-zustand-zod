@@ -46,7 +46,7 @@ export const Header = () => {
               }
               to="/"
             >
-              Inicio
+              Home
             </NavLink>
             <NavLink
               className={({ isActive }) =>
@@ -56,7 +56,7 @@ export const Header = () => {
               }
               to="/favorites"
             >
-              Favoritos
+              Favorites
             </NavLink>
           </nav>
         </div>

@@ -1,10 +1,39 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { useAppStore } from "../stores/useAppStore";
+import { DrinkModal } from "../types";
+import { toast } from "react-toastify";
 
 export default function Modal() {
   const modal = useAppStore((store) => store.modal);
   const closeModal = useAppStore((store) => store.closeModal);
+  const drinkModal = useAppStore((store) => store.drinkModal);
+  const addFavorite = useAppStore((store) => store.addFavorite);
+  const favorites = useAppStore((store) => store.favorites);
+  const setLocalStorage = useAppStore((store) => store.setLocalStorage);
+
+  const isFavorite = useMemo(() => {
+    return favorites.some((f) => f.idDrink === drinkModal.idDrink);
+  }, [drinkModal]);
+
+  const formatInstructions = () => {
+    const ingredients: JSX.Element[] = [];
+    for (let i = 1; i <= 6; i++) {
+      const ingredient = drinkModal[`strIngredient${i}` as keyof DrinkModal];
+      const measure = drinkModal[`strMeasure${i}` as keyof DrinkModal];
+      if (ingredient && measure) {
+        ingredients.push(
+          <li key={i}>
+            {drinkModal[`strIngredient${i}` as keyof DrinkModal] +
+              ` - ` +
+              drinkModal[`strMeasure${i}` as keyof DrinkModal]}
+          </li>
+        );
+      }
+    }
+    return ingredients;
+  };
+
   return (
     <>
       <Transition appear show={modal} as={Fragment}>
@@ -43,29 +72,52 @@ export default function Modal() {
                     as="h3"
                     className="text-gray-900 text-4xl font-extrabold my-5 text-center"
                   >
-                    Hola
+                    {drinkModal.strDrink}
                   </Dialog.Title>
-                  <img src="" alt="" />
+                  <img
+                    className="w-72 mx-auto"
+                    src={`${drinkModal.strDrinkThumb}`}
+                    alt={`logo ${drinkModal.strDrink}`}
+                  />
                   <Dialog.Title
                     as="h3"
                     className="text-gray-900 text-2xl font-extrabold my-5"
                   >
-                    Ingredientes y Cantidades
+                    Ingredients and Measures
                   </Dialog.Title>
+                  {formatInstructions()}
                   <Dialog.Title
                     as="h3"
                     className="text-gray-900 text-2xl font-extrabold my-5"
                   >
-                    Instrucciones
+                    Instructions
                   </Dialog.Title>
-                  <div className="flex justify-center">
+                  <p>{drinkModal.strInstructions}</p>
+                  <div className="md:flex justify-center gap-5">
                     <button
-                      className="bg-orange-500 text-white font-semibold p-2 mt-4"
+                      className={`${
+                        isFavorite
+                          ? "bg-red-500 hover:bg-red-600"
+                          : "bg-orange-500 hover:bg-orange-600"
+                      } transition-colors text-white font-semibold p-2 mt-4 w-full rounded-sm`}
                       onClick={() => {
-                        // Add your button click handler here
+                        isFavorite
+                          ? toast.success("Recipe removed from favorites")
+                          : toast.success("Recipe added to favorites");
+                        closeModal();
+                        addFavorite(drinkModal);
+                        setLocalStorage();
                       }}
                     >
-                      Cerrar
+                      {isFavorite ? "Remove Favorite" : "Add Favorite"}
+                    </button>
+                    <button
+                      className="bg-gray-500 hover:bg-gray-600 transition-colors text-white font-semibold p-2 mt-4 w-full rounded-sm"
+                      onClick={() => {
+                        closeModal();
+                      }}
+                    >
+                      Close
                     </button>
                   </div>
                 </Dialog.Panel>

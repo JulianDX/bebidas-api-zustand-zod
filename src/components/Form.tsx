@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Category, SearchDrink } from "../types";
 import { useAppStore } from "../stores/useAppStore";
+import { toast } from "react-toastify";
 
 type FormProps = {
   categories: Category;
@@ -27,7 +28,7 @@ export const Form = ({ categories }: FormProps) => {
     e.preventDefault();
 
     if (Object.values(search).includes("")) {
-      console.log("Seleccione un ingrediente");
+      toast.error("Ingrese la bebida o ingredientes");
       return;
     }
 
@@ -44,12 +45,12 @@ export const Form = ({ categories }: FormProps) => {
           className="text-xl mb-3 text-white font-extrabold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
           htmlFor="ingredient"
         >
-          Bebida o Ingrediente
+          Drink or Ingredients
         </label>
         <input
           className="p-2 rounded-lg focus:outline-none"
           type="text"
-          placeholder="Vodka, Tequila, Café..."
+          placeholder="Vodka, Tequila, Coffee..."
           name="ingredient"
           id="ingredient"
           value={search.ingredient}
@@ -61,7 +62,7 @@ export const Form = ({ categories }: FormProps) => {
           className="text-xl mb-3 text-white font-extrabold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
           htmlFor="category"
         >
-          Categoría
+          Category
         </label>
         <select
           className="p-2 rounded-lg focus:outline-none"
@@ -80,7 +81,7 @@ export const Form = ({ categories }: FormProps) => {
       <input
         className="block text-center w-full bg-orange-900 hover:bg-orange-800 transition-colors ease-in p-2 text-white font-extrabold text-lg cursor-pointer mt-7"
         type="submit"
-        value={"Buscar Recetas"}
+        value={"Search Recipes"}
       />
     </form>
   );

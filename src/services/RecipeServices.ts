@@ -1,6 +1,10 @@
 import axios from "axios";
-import { categoriesSchema, drinksSchema } from "../utils/recipe-schema";
-import { SearchDrink } from "../types";
+import {
+  categoriesSchema,
+  drinksSchema,
+  RecipeAPIResponseSchema,
+} from "../utils/recipe-schema";
+import { Drink, SearchDrink } from "../types";
 
 export const getCategoriesFromAPI = async () => {
   const url = "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list";
@@ -25,4 +29,13 @@ export const getDrinksFromAPI = async (search: SearchDrink) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getRecipeFromAPI = async (id: Drink["idDrink"]) => {
+  const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+  const petition = await axios(url);
+  const {
+    data: { drinks },
+  } = petition;
+  return RecipeAPIResponseSchema.safeParse(drinks[0]);
 };

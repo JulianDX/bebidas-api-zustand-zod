@@ -30,7 +30,7 @@ export const Drink = ({ drink }: DrinkProps) => {
           }}
           className="bg-orange-500 hover:bg-orange-600 transition-colors ease-in block w-full text-white font-semibold p-2"
         >
-          Ver Receta
+          View Recipe
         </button>
       </div>
     </div>
