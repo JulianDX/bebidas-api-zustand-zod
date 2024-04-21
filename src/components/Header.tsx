@@ -8,12 +8,9 @@ export const Header = () => {
   const getCategories = useAppStore((state) => state.getCategories);
   const categoriesFromApi = useAppStore((state) => state.categories);
 
-  const [categories, setCategories] = useState<Category>();
-
   useEffect(() => {
     getCategories();
-    setCategories(categoriesFromApi);
-  }, [categoriesFromApi]);
+  }, []);
 
   const { pathname } = useLocation();
 
@@ -60,7 +57,7 @@ export const Header = () => {
             </NavLink>
           </nav>
         </div>
-        {currentLocation && <Form categories={categories as Category} />}
+        {currentLocation && <Form categories={categoriesFromApi as Category} />}
       </div>
     </header>
   );
